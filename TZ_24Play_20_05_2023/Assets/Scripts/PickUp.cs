@@ -5,6 +5,7 @@ using UnityEngine;
 public class PickUp : MonoBehaviour
 {
     [SerializeField] private bool inHolder;
+
     private StackManager stackManager;
 
     private void Start() {
@@ -12,14 +13,17 @@ public class PickUp : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.CompareTag("PickUp") && !collision.gameObject.GetComponent<PickUp>().inHolder) {
-            collision.gameObject.GetComponent<BoxCollider>().enabled = false;
+        if (collision.gameObject.CompareTag("PickUp") && collision.gameObject.GetComponent<PickUp>().inHolder && !inHolder) {
+            SetInHolderState(true);
             stackManager.AddCube();
             Debug.Log("Touched " + collision.gameObject.name);
-            Destroy(collision.gameObject);
+            Destroy(gameObject);
+
         }else if (collision.gameObject.CompareTag("Wall")) {
-
-
+            SetInHolderState(false);
+            transform.parent = collision.gameObject.transform;
+            GetComponent<Collider>().enabled = false;
+            stackManager.RemoveCube();                
             Debug.Log("Touched " + collision.gameObject.name);
         }
     }
@@ -27,4 +31,5 @@ public class PickUp : MonoBehaviour
     public void SetInHolderState(bool _inHolder) {
         inHolder = _inHolder;
     }
+
 }

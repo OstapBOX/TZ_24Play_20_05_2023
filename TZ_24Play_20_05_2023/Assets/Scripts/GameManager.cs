@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     private GameObject roadNull;    
 
     private void Start() {
+        Application.targetFrameRate = 60;
         gameManagerCls = this;
         roadNull = GameObject.Find("RoadNull");
     }

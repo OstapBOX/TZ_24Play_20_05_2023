@@ -3,7 +3,7 @@ using UnityEngine;
 public class PickUpSpawner : MonoBehaviour {
     [SerializeField] private GameObject pickUpCube;
 
-    private int halfSlotsAmountPerPlatform = 3;
+    private int halfSlotsAmountPerPlatform = 2;
     private float[] slotsZPositions;
 
     private float spawnProbability = 222f;
@@ -35,7 +35,7 @@ public class PickUpSpawner : MonoBehaviour {
         for (int i = 0; i < halfSlotsAmountPerPlatform; i++) {
             slotsZPositions[i] =   edgePlatformZOffset * 2 + spawnInterwals * i + transform.position.z;
         }
-        for (int i = halfSlotsAmountPerPlatform + 1; i < halfSlotsAmountPerPlatform * 2; i++) {
+        for (int i = halfSlotsAmountPerPlatform+1; i < halfSlotsAmountPerPlatform * 2; i++) {
             slotsZPositions[i] =   edgePlatformZOffset * 4 + spawnInterwals * i + transform.position.z;
         }
     }
