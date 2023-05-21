@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class LevelGeneration : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class LevelGeneration : MonoBehaviour
 
     private int startRoadLenght = 4;
     private int roadOffset;
+    private float spawnPoint = 50f;
 
     private void Start() {
         LevelGenerationCls = this;
@@ -29,8 +31,10 @@ public class LevelGeneration : MonoBehaviour
     }
 
     public void SpawnGround() {
-        Instantiate(roadPart, new Vector3(roadPart.transform.position.x, roadPart.transform.position.y, roadPart.transform.position.z + ((startRoadLenght -1) * roadOffset)),
+        GameObject currentRoad = Instantiate(roadPart, 
+                        new Vector3(roadPart.transform.position.x, roadPart.transform.position.y + spawnPoint , roadPart.transform.position.z + ((startRoadLenght -1) * roadOffset)),
                        Quaternion.identity, transform);
+        currentRoad.transform.DOMoveY(0, 2f).SetEase(Ease.OutBounce);
     }
 
     private void SetRoadOffset() {

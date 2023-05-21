@@ -9,6 +9,10 @@ public class StackManager : MonoBehaviour
     [SerializeField] private GameObject[] stack;
     [SerializeField] private GameObject stickman;
     [SerializeField] private GameObject addConfetti;
+    [SerializeField] private GameObject plusOne;
+
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip pickUpClip;
 
     private CinemachineImpulseSource impulseSource;
 
@@ -35,18 +39,23 @@ public class StackManager : MonoBehaviour
         AddToStack();
         stack[0] = addedCube;
 
-        for(int i = 0; i< transform.childCount-1; i++) {
+        //Effecs
+        ShakeStack();
+        Instantiate(addConfetti, addedCube.transform.position, Quaternion.identity);
+        audioSource.PlayOneShot(pickUpClip);
+        Instantiate(plusOne, stickman.transform.position + Vector3.up, Quaternion.identity);
+    }
+
+    private void ShakeStack() {
+        for (int i = 0; i < transform.childCount - 1; i++) {
             stack[i].transform.DOShakeScale(0.5f, 1.03f, 10, 30);
         }
-
-        Instantiate(addConfetti, addedCube.transform.position, Quaternion.identity);
     }
 
     public void RemoveCube() {
         if(cubesInStack == 1) {
             StopAllCoroutines();
             stickman.GetComponent<RagdollControll>().enabled = true;
-            //GameOver();
             GameManager.gameManagerCls.GameOver();           
         }
         else if(!removing) {
@@ -57,6 +66,7 @@ public class StackManager : MonoBehaviour
     }
 
     private IEnumerator WallSurfIE() {
+        Handheld.Vibrate();
         yield return new WaitForSeconds(wallSurfTime);
         LandStack();
         yield return new WaitForSeconds(fallTime/2.5f);
@@ -80,14 +90,6 @@ public class StackManager : MonoBehaviour
     private void AddToStack() {        
         for (int i = cubesInStack; i > 0; i--) {
             stack[i] = stack[i - 1];            
-        }
-    }
-
-    private void GameOver() {
-        for (int i = 0; i < cubesInStack; i++) {
-            Rigidbody rigidbody = stack[i].GetComponent<Rigidbody>();
-            rigidbody.isKinematic = true;
-            rigidbody.useGravity = false;
         }
     }
 }

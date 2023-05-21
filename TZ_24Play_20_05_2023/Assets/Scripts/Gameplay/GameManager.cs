@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,18 +11,27 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject startScreen;
     [SerializeField] private GameObject restartButton;
     [SerializeField] private GameObject gameOverScreen;
+
     [SerializeField] private ParticleSystem warpEffect;
+    [SerializeField] private ParticleSystem trail;
+
+    private CinemachineTransposer transposer;
+    private Vector3 gameCameraPosition = new Vector3(4.2f, 8.6f, -10.88f);
+    private float smoothCameraMovement = 2f;
+
+    private GameState gameState;
+    private GameObject roadNull;
+   
 
     private int wallWidth = 5;
     private int maxWallHeight = 5;
-
-    private GameState gameState = GameState.StartGame;
-    private GameObject roadNull;    
 
     private void Start() {
         Application.targetFrameRate = 60;
         gameManagerCls = this;
         roadNull = GameObject.Find("RoadNull");
+        transposer = GameObject.Find("VirtualCamera").GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineTransposer>();
+        
     }
 
     private void Update() {
@@ -32,6 +42,7 @@ public class GameManager : MonoBehaviour
 
         if(GetGameState() == GameState.PlayGame) {
             MoveRoad();
+            transposer.m_FollowOffset = Vector3.Lerp(transposer.m_FollowOffset, gameCameraPosition, smoothCameraMovement * Time.deltaTime);
         }
     }
 
@@ -40,6 +51,7 @@ public class GameManager : MonoBehaviour
         startScreen.SetActive(false);
         restartButton.SetActive(true);
         warpEffect.Play();
+        trail.Play();
     }
 
     public void GameOver() {
@@ -47,6 +59,7 @@ public class GameManager : MonoBehaviour
         restartButton.SetActive(false);
         StartCoroutine(ShowGameOverScreen());
         warpEffect.Stop();
+        trail.Pause();
     }
 
     private IEnumerator ShowGameOverScreen() {

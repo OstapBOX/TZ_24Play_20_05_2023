@@ -12,8 +12,6 @@ public class PlayerControll : MonoBehaviour {
     private float swerveAmount;
 
     private float bordersPositionX = 2f;
-
-
     public float MoveFactorX => moveFactorX;
 
     private void Update() {

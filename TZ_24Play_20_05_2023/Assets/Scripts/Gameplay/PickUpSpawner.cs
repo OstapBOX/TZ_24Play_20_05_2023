@@ -1,12 +1,10 @@
 using UnityEngine;
 
 public class PickUpSpawner : MonoBehaviour {
-    [SerializeField] private GameObject pickUpCube;
 
+    [SerializeField] private GameObject pickUpCube;
     private int halfSlotsAmountPerPlatform = 2;
     private float[] slotsZPositions;
-
-    private float spawnProbability = 110f;
 
     private void Start() {
         slotsZPositions = new float[halfSlotsAmountPerPlatform * 2];
@@ -16,13 +14,8 @@ public class PickUpSpawner : MonoBehaviour {
 
     private void SpawnPickUps() {
         for (int i = 0; i < halfSlotsAmountPerPlatform * 2; i++) {
-            
-            if (Random.Range(0, 100) <= spawnProbability) {
-                
-                    GameObject currentPickUp = Instantiate(pickUpCube, new Vector3(RandomXPosition(), 0.5f, slotsZPositions[i]), Quaternion.identity);
-                    currentPickUp.transform.parent = gameObject.transform;
-               
-            }
+            GameObject currentPickUp = Instantiate(pickUpCube, new Vector3(RandomXPosition(), transform.position.y + 0.5f, slotsZPositions[i]), Quaternion.identity);
+            currentPickUp.transform.parent = gameObject.transform;
         }
     }
 
@@ -36,10 +29,10 @@ public class PickUpSpawner : MonoBehaviour {
         float spawnInterwals = (halfPlatformSize - edgePlatformZOffset) / halfSlotsAmountPerPlatform;
 
         for (int i = 0; i < halfSlotsAmountPerPlatform; i++) {
-            slotsZPositions[i] =   edgePlatformZOffset * 2 + spawnInterwals * i + transform.position.z;
+            slotsZPositions[i] = edgePlatformZOffset * 2 + spawnInterwals * i + transform.position.z;
         }
         for (int i = halfSlotsAmountPerPlatform + 1; i < halfSlotsAmountPerPlatform * 2; i++) {
-            slotsZPositions[i] =   edgePlatformZOffset * 4 + spawnInterwals * i + transform.position.z;
+            slotsZPositions[i] = edgePlatformZOffset * 4 + spawnInterwals * i + transform.position.z;
         }
     }
 
